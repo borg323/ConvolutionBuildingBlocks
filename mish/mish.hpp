@@ -107,6 +107,24 @@ namespace functors
         }
     };
 
+    struct mish_aj1_fastdiv
+    {
+        __device__ float operator()(float x)
+        {
+            float expx = __expf(x);
+            return __fdividef(x, 1.0f + __fdividef(2.0f, expx * (2.0f + expx)));
+        }
+    };
+
+    struct mish_aj1_fastdiv_fma
+    {
+        __device__ float operator()(float x)
+        {
+            float expx = __expf(x);
+            return __fdividef(x, 1.0f + __fdividef(2.0f, __fmaf_rn(expx, expx, expx + expx)));
+        }
+    };
+
     struct mish_aj2
     {
         __device__ float operator()(float x)

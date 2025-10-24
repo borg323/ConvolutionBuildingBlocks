@@ -129,6 +129,18 @@ int main ()
     std::cout << "[vec1] mish_aj1: " << l2norm(output_ref, output_h, NUM_ELEMENTS) << '\n';
 
     CHECK_CUDA(cudaMemcpy(input_d, input_h, NUM_ELEMENTS * sizeof(float), cudaMemcpyHostToDevice));
+    activate_vec1<functors::mish_aj1_fastdiv><<<NUM_BLOCKS, BLOCK_SIZE>>>(output_d, input_d, NUM_ELEMENTS);
+    CHECK_CUDA(cudaDeviceSynchronize());
+    CHECK_CUDA(cudaMemcpy(output_h, output_d, NUM_ELEMENTS * sizeof(float), cudaMemcpyDeviceToHost));
+    std::cout << "[vec1] mish_aj1_fastdiv: " << l2norm(output_ref, output_h, NUM_ELEMENTS) << '\n';
+
+    CHECK_CUDA(cudaMemcpy(input_d, input_h, NUM_ELEMENTS * sizeof(float), cudaMemcpyHostToDevice));
+    activate_vec1<functors::mish_aj1_fastdiv_fma><<<NUM_BLOCKS, BLOCK_SIZE>>>(output_d, input_d, NUM_ELEMENTS);
+    CHECK_CUDA(cudaDeviceSynchronize());
+    CHECK_CUDA(cudaMemcpy(output_h, output_d, NUM_ELEMENTS * sizeof(float), cudaMemcpyDeviceToHost));
+    std::cout << "[vec1] mish_aj1_fastdiv_fma: " << l2norm(output_ref, output_h, NUM_ELEMENTS) << '\n';
+
+    CHECK_CUDA(cudaMemcpy(input_d, input_h, NUM_ELEMENTS * sizeof(float), cudaMemcpyHostToDevice));
     activate_vec1<functors::mish_aj2><<<NUM_BLOCKS, BLOCK_SIZE>>>(output_d, input_d, NUM_ELEMENTS);
     CHECK_CUDA(cudaDeviceSynchronize());
     CHECK_CUDA(cudaMemcpy(output_h, output_d, NUM_ELEMENTS * sizeof(float), cudaMemcpyDeviceToHost));
@@ -195,6 +207,18 @@ int main ()
     CHECK_CUDA(cudaDeviceSynchronize());
     CHECK_CUDA(cudaMemcpy(output_h, output_d, NUM_ELEMENTS * sizeof(float), cudaMemcpyDeviceToHost));
     std::cout << "[vec4] mish_aj1: " << l2norm(output_ref, output_h, NUM_ELEMENTS) << '\n';
+
+    CHECK_CUDA(cudaMemcpy(input_d, input_h, NUM_ELEMENTS * sizeof(float), cudaMemcpyHostToDevice));
+    activate_vec4<functors::mish_aj1_fastdiv><<<NUM_BLOCKS, BLOCK_SIZE>>>(output_d4, input_d4, NUM_ELEMENTS / 4);
+    CHECK_CUDA(cudaDeviceSynchronize());
+    CHECK_CUDA(cudaMemcpy(output_h, output_d, NUM_ELEMENTS * sizeof(float), cudaMemcpyDeviceToHost));
+    std::cout << "[vec4] mish_aj1_fastdiv: " << l2norm(output_ref, output_h, NUM_ELEMENTS) << '\n';
+
+    CHECK_CUDA(cudaMemcpy(input_d, input_h, NUM_ELEMENTS * sizeof(float), cudaMemcpyHostToDevice));
+    activate_vec4<functors::mish_aj1_fastdiv_fma><<<NUM_BLOCKS, BLOCK_SIZE>>>(output_d4, input_d4, NUM_ELEMENTS / 4);
+    CHECK_CUDA(cudaDeviceSynchronize());
+    CHECK_CUDA(cudaMemcpy(output_h, output_d, NUM_ELEMENTS * sizeof(float), cudaMemcpyDeviceToHost));
+    std::cout << "[vec4] mish_aj1_fastdiv_fma: " << l2norm(output_ref, output_h, NUM_ELEMENTS) << '\n';
 
     CHECK_CUDA(cudaMemcpy(input_d, input_h, NUM_ELEMENTS * sizeof(float), cudaMemcpyHostToDevice));
     activate_vec4<functors::mish_aj2><<<NUM_BLOCKS, BLOCK_SIZE>>>(output_d4, input_d4, NUM_ELEMENTS / 4);
